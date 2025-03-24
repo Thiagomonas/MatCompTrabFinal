@@ -13,7 +13,7 @@ def calc_valor_resp(res, pesos, valores, capacidade):
     return valor_total - penalidade
 
 
-def sol_mochila(pesos, valores, capacidade, max_iter=1000, T0=1000, alpha=0.95):
+def sol_mochila(pesos, valores, capacidade, max_iter=1000, temp_ini=1000, alpha=0.95):
     n_itens = len(pesos)
 
     res_atual = np.random.randint(0, 2, size=n_itens)
@@ -21,7 +21,7 @@ def sol_mochila(pesos, valores, capacidade, max_iter=1000, T0=1000, alpha=0.95):
     melhor_res = res_atual
     melhor_val = val_res
 
-    T = T0
+    temp = temp_ini
     for i in range(max_iter):
         prox_res = res_atual.copy()
         index = np.random.randint(0, n_itens)
@@ -30,7 +30,7 @@ def sol_mochila(pesos, valores, capacidade, max_iter=1000, T0=1000, alpha=0.95):
         prox_val = calc_valor_resp(prox_res, pesos, valores, capacidade)
 
         diff_val = prox_val - val_res
-        if diff_val > 0 or np.random.rand() < math.exp(diff_val / T):
+        if diff_val > 0 or np.random.rand() < math.exp(diff_val / temp):
             res_atual = prox_res
             val_res = prox_val
 
@@ -38,9 +38,9 @@ def sol_mochila(pesos, valores, capacidade, max_iter=1000, T0=1000, alpha=0.95):
             melhor_res = res_atual
             melhor_val = val_res
 
-        T *= alpha
+        temp *= alpha
 
-        if i % 100 == 0:
+        if i % (max_iter // 10) == 0:
             print(f'iteração {i}: melhor valor {melhor_val}')
     return melhor_res, melhor_val
 
@@ -52,6 +52,3 @@ def criar_valores(n_itens, min_peso, max_peso, min_val, max_val, capacidade=0.6)
     capacidade = peso_total * capacidade
     return pesos, valores, capacidade
 
-pesos, valores, capacidade = criar_valores(100, 5, 50, 1, 15)
-res, val = sol_mochila(pesos, valores, capacidade)
-print(res, val)

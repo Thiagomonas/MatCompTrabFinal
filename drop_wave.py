@@ -20,7 +20,7 @@ F, CR = 0.8, 0.9  # DE
 class Particula:
     def __init__(self):
         self.x = np.random.uniform(x_min, x_max)
-        self.y = np.random.uniform(x_min, x_max)
+        self.y = np.random.uniform(x_min, x_max)        
         self.vx = np.random.uniform(-v_maz, v_maz)
         self.vy = np.random.uniform(-v_maz, v_maz)
         self.melhor_x = self.x
